@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حملة الأمن السيبراني ورموز QR - جامعة الأمير سطام بن عبدالعزيز & نادي الذكاء الاصطناعي</title>
+    <!-- استيراد خطوط الهوية الرسمية -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-dark: #112F40;  /* الكحلي العميق - الاستقرار والثقة */
+            --accent-blue: #2896DD;   /* الأزرق الحركي - الابتكار والطموح */
+            --neon-cyan: #1FC1DF;     /* السماوي النيون - الإبداع والتطور التقني */
+            --white: #ffffff;
+            --card-bg: rgba(17, 47, 64, 0.92);
+            --danger-red: #ff4757;
+            --success-green: #2ed573;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-dark);
+            color: var(--white);
+            line-height: 1.8;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(31, 193, 223, 0.08) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(40, 150, 221, 0.08) 0%, transparent 45%);
+        }
+
+        /* نافذة التحذير الأولية عند مسح الـ QR */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 33, 46, 0.96);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            backdrop-filter: blur(12px);
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #112F40, #1b445c);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 24px;
+            max-width: 620px;
+            width: 100%;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(31, 193, 223, 0.3);
+        }
+
+        .warning-icon {
+            font-size: 64px;
+            color: var(--danger-red);
+            margin-bottom: 20px;
+            animation: bounce 1.5s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .warning-title {
+            font-size: 25px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .warning-text {
+            font-size: 16px;
+            color: #dcdde1;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .warning-highlight {
+            color: var(--neon-cyan);
+            font-weight: 700;
+            display: block;
+            margin-top: 12px;
+            font-size: 17px;
+        }
+
+        .btn-safe {
+            background: linear-gradient(135deg, var(--accent-blue), var(--neon-cyan));
+            color: var(--white);
+            border: none;
+            padding: 14px 38px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 20px rgba(31, 193, 223, 0.4);
+        }
+
+        .btn-safe:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(31, 193, 223, 0.6);
+        }
+
+        /* الهيدر */
+        header {
+            background: rgba(17, 47, 64, 0.95);
+            border-bottom: 1px solid rgba(31, 193, 223, 0.25);
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-box {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--neon-cyan));
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 22px;
+            color: var(--white);
+            box-shadow: 0 0 15px rgba(31, 193, 223, 0.4);
+        }
+
+        .brand-text h1 {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--white);
+        }
+
+        .brand-text p {
+            font-size: 11px;
+            color: var(--neon-cyan);
+            letter-spacing: 0.5px;
+        }
+
+        .univ-badge {
+            background: rgba(40, 150, 221, 0.15);
+            border: 1px solid var(--accent-blue);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--neon-cyan);
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-section {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(180deg, rgba(40, 150, 221, 0.12) 0%, transparent 100%);
+            border-radius: 24px;
+            margin-bottom: 45px;
+            border: 1px solid rgba(31, 193, 223, 0.2);
+        }
+
+        .hero-section h2 {
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--white), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 16px;
+            color: #dcdde1;
+            max-width: 780px;
+            margin: 0 auto 20px;
+        }
+
+        .slogan-tag {
+            display: inline-block;
+            background: rgba(31, 193, 223, 0.1);
+            color: var(--neon-cyan);
+            padding: 6px 20px;
+            border-radius: 15px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px dashed var(--neon-cyan);
+            margin-bottom: 15px;
+        }
+
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(31, 193, 223, 0.22);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--neon-cyan);
+            border-bottom: 2px solid rgba(31, 193, 223, 0.2);
+            padding-bottom: 12px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        .tool-box {
+            background: rgba(40, 150, 221, 0.1);
+            border: 1px dashed var(--accent-blue);
+            padding: 22px;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .btn-action-custom {
+            background: linear-gradient(135deg, var(--accent-blue), #2196f3);
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            text-align: center;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-action-custom:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        .guide-item {
+            background: rgba(11, 33, 46, 0.95);
+            border: 1px solid rgba(40, 150, 221, 0.3);
+            padding: 24px;
+            border-radius: 16px;
+            transition: var(--transition);
+        }
+
+        .guide-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 5px 20px rgba(31, 193, 223, 0.15);
+        }
+
+        .guide-item h4 {
+            color: var(--neon-cyan);
+            margin-bottom: 10px;
+            font-size: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .guide-item p {
+            font-size: 14px;
+            color: #dcdde1;
+        }
+
+        .quiz-container {
+            background: rgba(11, 33, 46, 0.95);
+            border: 1px solid rgba(31, 193, 223, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .quiz-header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .quiz-progress {
+            color: var(--neon-cyan);
+        }
+
+        .quiz-points-badge {
+            background: rgba(46, 213, 115, 0.15);
+            color: var(--success-green);
+            border: 1px solid var(--success-green);
+            padding: 5px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .question-box h3 {
+            font-size: 19px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: rgba(17, 47, 64, 0.9);
+            border: 1px solid var(--accent-blue);
+            color: var(--white);
+            padding: 14px 20px;
+            text-align: right;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(40, 150, 221, 0.25);
+            border-color: var(--neon-cyan);
+        }
+
+        .option-btn.correct {
+            background: rgba(46, 213, 115, 0.2) !important;
+            border-color: var(--success-green) !important;
+        }
+
+        .option-btn.wrong {
+            background: rgba(255, 71, 87, 0.2) !important;
+            border-color: var(--danger-red) !important;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct-fb {
+            background: rgba(46, 213, 115, 0.15);
+            border: 1px solid var(--success-green);
+            color: #2ed573;
+        }
+
+        .quiz-feedback.wrong-fb {
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid var(--danger-red);
+            color: #ff6b81;
+        }
+
+        .quiz-nav-btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--neon-cyan));
+            color: var(--white);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .quiz-score-card {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .quiz-score-card h3 {
+            font-size: 26px;
+            margin-bottom: 12px;
+            color: var(--neon-cyan);
+        }
+
+        .pledge-card {
+            background: linear-gradient(135deg, rgba(17,47,64,0.95), rgba(40,150,221,0.2));
+            border: 2px solid var(--neon-cyan);
+            text-align: center;
+            padding: 40px;
+            border-radius: 20px;
+        }
+
+        .pledge-card h3 {
+            font-size: 23px;
+            margin-bottom: 12px;
+            color: var(--white);
+        }
+
+        .pledge-card p {
+            font-size: 15px;
+            color: #dcdde1;
+            margin-bottom: 22px;
+            max-width: 620px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-pledge {
+            background: linear-gradient(135deg, #2ed573, #17b978);
+            color: var(--white);
+            border: none;
+            padding: 14px 35px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(46, 213, 115, 0.4);
+        }
+
+        .btn-pledge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(46, 213, 115, 0.6);
+        }
+
+        .pledge-success-msg {
+            margin-top: 18px;
+            font-size: 15px;
+            color: var(--success-green);
+            font-weight: 700;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid rgba(31, 193, 223, 0.2);
+            color: #a4b0be;
+            font-size: 13px;
+            background: rgba(11, 33, 46, 0.9);
+        }
+
+        footer span {
+            color: var(--neon-cyan);
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- نافذة التحذير الأولية عند مسح الـ QR -->
+    <div class="modal-overlay" id="warningModal">
+        <div class="warning-box">
+            <div class="warning-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="warning-title">تنبيه أمني هام! (احذر الروابط المجهولة)</div>
+            <div class="warning-text">
+                أنت على وشك الدخول عبر رمز QR تم مسحه في الجامعة.
+                <span class="warning-highlight">هل اختبرت رمز QR كود قبل مسحه؟ إذا لم تختبره أو تتأكد منه، ماذا لو كان ملف اختراق حقيقي وسرق بياناتك ومعلوماتك الحساسة؟</span>
+            </div>
+            <button class="btn-safe" onclick="closeWarningModal()">فهمت التحذير، تابع التصفح الآمن</button>
+        </div>
+    </div>
+
+    <!-- الهيدر -->
+    <header>
+        <div class="brand-container">
+            <div class="logo-box">AI</div>
+            <div class="brand-text">
+                <h1>نادي الذكاء الاصطناعي</h1>
+                <p>Artificial Intelligence Club</p>
+            </div>
+        </div>
+        <div class="univ-badge">
+            <i class="fas fa-university"></i> جامعة الأمير سطام بن عبدالعزيز
+        </div>
+    </header>
+
+    <main>
+        <!-- قسم الترويسة الرئيسية -->
+        <section class="hero-section">
+            <div class="slogan-tag">حيث يلتقي الإبداع البشري بآفاق الابتكار[cite: 7]</div>
+            <h2>شهر التوعية بالأمن السيبراني – حملة فحص QR</h2>
+            <p>
+                تهدف الحملة التوعوية المشتركة لتعزيز وعي الطلبة بمخاطر احتيال رموز الاستجابة السريعة (Quishing)، وكيفية حماية الأجهزة والبيانات من الروابط والملفات الخبيثة.
+            </p>
+        </section>
+
+        <!-- أداة الفحص الرسمية (VirusTotal) -->
+        <section class="section-card">
+            <div class="section-title">
+                <i class="fas fa-shield-alt"></i> أداة الفحص والتحقق الأمني المعتمد
+            </div>
+            <div class="tools-grid">
+                <div class="tool-box">
+                    <div>
+                        <strong>فحص الملفات عبر VirusTotal</strong>
+                        <div style="font-size: 13px; color: #a4b0be; margin-top: 5px;">تحليل وفحص الملفات والروابط عبر أكثر من 70 محرك مكافحة فيروسات عالمي.</div>
+                    </div>
+                    <a href="https://www.virustotal.com/gui/home/upload" target="_blank" class="btn-action-custom">
+                        <i class="fas fa-external-link-alt"></i> الانتقال لمنصة VirusTotal
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- دليل تجنب الاختراق وحماية الأجهزة -->
+        <section class="section-card">
+            <div class="section-title">
+                <i class="fas fa-lock"></i> دليل الوقاية الشامل وتجنب الاختراق الرقمي
+            </div>
+            <div class="guide-grid">
+                <div class="guide-item">
+                    <h4><i class="fas fa-qrcode"></i> الحذر من الـ Quishing</h4>
+                    <p>لا تقم بمسح رموز QR الملصقة عشوائياً في الأماكن العامة ما لم تكن متأكدًا من جهة الإصدار الرسمية داخل الجامعة.</p>
+                </div>
+                <div class="guide-item">
+                    <h4><i class="fas fa-link"></i> التدقيق في نطاق الروابط</h4>
+                    <p>قبل إدخال بياناتك أو بيانات الدخول الأكاديمية، تأكد دائماً من أن نطاق الرابط ينتهي بالنطاق الرسمي للجامعة أو الجهة الموثوقة.</p>
+                </div>
+                <div class="guide-item">
+                    <h4><i class="fas fa-user-shield"></i> المصادقة الثنائية (MFA)</h4>
+                    <p>فعّل دائماً التحقق بخطوتين على جميع حساباتك الأكاديمية والبريدية لجعل عملية اختراقها شبه مستحيلة.</p>
+                </div>
+                <div class="guide-item">
+                    <h4><i class="fas fa-wifi"></i> تجنب الواي فاي المفتوح</h4>
+                    <p>امتنع عن إتمام المعاملات البنكية الحساسة عبر شبكات الإنترنت العامة غير المشفّرة دون استخدام شبكة افتراضية آمنة (VPN).</p>
+                </div>
+                <div class="guide-item">
+                    <h4><i class="fas fa-download"></i> حذر تحميل الملفات</h4>
+                    <p>تجنب تماماً فتح ملفات بصيغة التنفيذ (.exe أو .apk) الواردة من مصادر مجهولة وتأكد من فحصها عبر VirusTotal.</p>
+                </div>
+                <div class="guide-item">
+                    <h4><i class="fas fa-history"></i> التحديثات المستمرة</h4>
+                    <p>حافظ على تحديث نظام التشغيل وتطبيقات المتصفح لإغلاق الثغرات الأمنية المكتشفة حديثًا.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- الاختبار التفاعلي (20 سؤالاً) -->
+        <section class="section-card">
+            <div class="section-title">
+                <i class="fas fa-graduation-cap"></i> التحدي التفاعلي الشامل (20 سؤالاً - قياس النسبة المئوية)
+            </div>
+            <div class="quiz-container" id="quizContainer"></div>
+        </section>
+
+        <!-- قسم التعهد السيبراني الرمزي -->
+        <section class="section-card">
+            <div class="pledge-card">
+                <h3><i class="fas fa-handshake"></i> تعهد الأمن السيبراني الشخصي</h3>
+                <p>
+                    ألتزم بحماية أمن بيئتي الجامعية الرقمية، والتحقق المستمر من كل رابط أو رمز QR قبل التفاعل معه، ونشر ثقافة الوعي السيبراني بين زملائي.
+                </p>
+                <button class="btn-pledge" onclick="signPledge()">
+                    <i class="fas fa-check-circle"></i> تم التعهد بحماية نفسي ومسح بحذر
+                </button>
+                <div class="pledge-success-msg" id="pledgeSuccess">
+                    <i class="fas fa-award"></i> شكرًا لالتزامك! أنت تمثل خط الدفاع الأول لحماية مجتمع جامعة الأمير سطام بن عبدالعزيز الرقمي.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- الفوتر -->
+    <footer>
+        <p>جميع الحقوق محفوظة &copy; 2026 | <span>نادي الذكاء الاصطناعي</span> - <span>جامعة الأمير سطام بن عبدالعزيز</span></p>
+        <p style="margin-top: 5px; font-size: 12px; color: #2896DD;">حملة شهر التوعية بالأمن السيبراني - نحو بيئة رقمية آمنة ومبتكرة</p>
+    </footer>
+
+    <script>
+        function closeWarningModal() {
+            document.getElementById('warningModal').style.display = 'none';
+        }
+
+        function signPledge() {
+            document.getElementById('pledgeSuccess').style.display = 'block';
+        }
+
+        // بيانات الـ 20 سؤالاً مع توزيع متوازن ودقيق للإجابات الصحيحة
+        const quizData = [
+            {
+                q: "1. ما هو مصطلح 'Quishing' الذي تحذر منه الحملة؟",
+                options: [
+                    "احتيال عبر مسح رموز الاستجابة السريعة (QR Codes) الخبيثة",
+                    "نوع من البرمجيات الخبيثة لتسريع الألعاب",
+                    "بروتوكول تشفير شبكات الواي فاي السريعة",
+                    "تقنية ذكاء اصطناعي لتوليد الصور"
+                ],
+                correct: 0,
+                explanation: "الـ Quishing هو نوع من التصيد الاحتيالي الذي يعتمد على استدراج الضحايا عبر رموز QR وهمية تؤدي لروابط خبيثة."
+            },
+            {
+                q: "2. وصلتك رسالة من جهة رسمية تطالبك بتحديث بياناتك الأكاديمية فوراً عبر رابط خارجي، ما التصرف الصحيح؟",
+                options: [
+                    "الضغط على الرابط فوراً لتحديث البيانات",
+                    "تجاهل الرابط والتحقق عبر البوابة الرسمية للجامعة",
+                    "إرسال كلمة المرور عبر الرد على الرسالة",
+                    "مشاركة الرابط مع الأصدقاء للتأكد"
+                ],
+                correct: 1,
+                explanation: "الجهات الرسمية لا تطلب بيانات حساسة عبر روابط خارجية، ويجب دائماً الرجوع للمنصات الرسمية المعتمدة."
+            },
+            {
+                q: "3. ما هي الفائدة الأساسية من استخدام منصة مثل VirusTotal للروابط والملفات؟",
+                options: [
+                    "تسريع سرعة تحميل الملفات الكبيرة",
+                    "ضغط الصور وتقليل مساحتها",
+                    "فحص الملفات والروابط عبر محركات متعددة لاكتشاف الفيروسات",
+                    "تعديل المستندات النصية عبر الإنترنت"
+                ],
+                correct: 2,
+                explanation: "VirusTotal تتيح فحص الملفات والروابط بدقة واكتشاف ما إذا كانت تحتوي على برمجيات خبيثة."
+            },
+            {
+                q: "4. ما هو المعيار الأهم لقوة كلمة المرور؟",
+                options: [
+                    "أن تكون مرتبطة بتاريخ ميلادك ليسهل تذكرها",
+                    "أن تكون قصيرة ولا تتجاوز 4 أرقام",
+                    "أن تكون نفس كلمة المرور المستخدمة في جميع حساباتك",
+                    "أن تتكون من أحرف كبيرة وصغيرة وأرقام ورموز وبطول كافٍ"
+                ],
+                correct: 3,
+                explanation: "كلمات المرور القوية والمعقدة تصعب جداً عمليات الاختراق بالتخمين أو البرمجيات."
+            },
+            {
+                q: "5. ماذا تعني المصادقة الثنائية (MFA أو 2FA)؟",
+                options: [
+                    "إضافة طبقة تحقق ثانية مثل رمز يُرسل لهاتفك بالإضافة لكلمة المرور",
+                    "استخدام جدار حماية مزدوج للجهاز",
+                    "فتح حسابين بريد إلكتروني في نفس الوقت",
+                    "تثبيت برنامجين لمكافحة الفيروسات معا"
+                ],
+                correct: 0,
+                explanation: "المصادقة الثنائية تحمي حسابك حتى لو تم تسريب كلمة المرور الخاصة بك."
+            },
+            {
+                q: "6. إذا وجدت ملصق QR جديد وضع فوق ملصق قديم في أحد ممرات الجامعة، ما الاحتمال الأكبر؟",
+                options: [
+                    "تحديث رسمي لإدارة الجامعة",
+                    "محاولة احتيال محتملة (Quishing) لتوجيهك لموقع مزيف",
+                    "إعلان عن فعالية ترفيهية موثوقة تماماً",
+                    "خطأ مطبعي عارٍ من الصحة"
+                ],
+                correct: 1,
+                explanation: "المهاجمون غالباً ما يلصقون رموز QR وهمية فوق الرموز الأصلية لخداع المستخدمين."
+            },
+            {
+                q: "7. ما هو التصرف الآمن عند استخدام شبكة واي فاي عامة في مقهى أو مطار؟",
+                options: [
+                    "إجراء العمليات البنكية بكل أمان",
+                    "تعطيل جدار الحماية لتسريع التصفح",
+                    "تجنب تصفح الحساسات والخدمات المصرفية أو استخدام شبكة VPN آمنة",
+                    "مشاركة ملفاتك الشخصية على الشبكة العامة"
+                ],
+                correct: 2,
+                explanation: "الشبكات العامة غير مشفرة وعرضة لتنصت المخترقين، لذا ينصح بحذر شديد أو استخدام VPN."
+            },
+            {
+                q: "8. ما هي الهندسة الاجتماعية (Social Engineering) في الأمن السيبراني؟",
+                options: [
+                    "تصميم البنية التحتية لشبكات الحاسب",
+                    "برمجة الروبوتات الاجتماعية للجامعات",
+                    "تحليل بيانات وسائل التواصل الاجتماعي",
+                    "استغلال العامل البشري خداعاً واختراق ثقة الأفراد للحصول على معلومات"
+                ],
+                correct: 3,
+                explanation: "الهندسة الاجتماعية تعتمد على خداع البشر لأنهم غالباً ما يُعتبرون الحلقة الأضعف أمنياً."
+            },
+            {
+                q: "9. ما الصيغة الأكثر خطورة عند تحميل ملفات غير موثوقة عبر الإنترنت؟",
+                options: [
+                    "ملفات تنفيذية .exe أو سكريبتات مشبوهة",
+                    "ملفات نصية .txt",
+                    "صور بصيغة .jpg",
+                    "مستندات .pdf عادية"
+                ],
+                correct: 0,
+                explanation: "الملفات التنفيذية قادرة على تشغيل برمجيات خبيثة فور فتحها على الجهاز."
+            },
+            {
+                q: "10. ما هو الهدف من تحديث نظام التشغيل وتطبيقات هاتفك باستمرار؟",
+                options: [
+                    "إضافة ألوان جديدة فقط",
+                    "إغلاق الثغرات الأمنية المكتشفة وحماية الجهاز من الاختراقات الحديثة",
+                    "زيادة استهلاك البطارية",
+                    "إلغاء التطبيقات القديمة تلقائياً"
+                ],
+                correct: 1,
+                explanation: "التحديثات الأمنية تعالج الثغرات البرمجية التي قد يستغلها المخترقون."
+            },
+            {
+                q: "11. لماذا يُعد استخدام نفس كلمة المرور لكل حساباتك خطراً كبيراً؟",
+                options: [
+                    "لأن نسيانها سيغلق حساباً واحداً فقط",
+                    "لأن الأنظمة ترفض ذلك تقنياً دائماً",
+                    "لأنه في حال اختراق موقع واحد، يتمكن المهاجم من دخول جميع حساباتك الأخرى",
+                    "لأنها تستهلك ذاكرة الجهاز"
+                ],
+                correct: 2,
+                explanation: "يُعرف هذا باختراق بيانات الاعتماد المتبادلة، حيث يؤدي تسريب موقع واحد لكارثة على باقي حساباتك."
+            },
+            {
+                q: "12. كيف تستدل على أن الموقع الإلكتروني الذي تزوره آمن ومشفّر؟",
+                options: [
+                    "أن يطلب منك رقم هاتفك فوراً",
+                    "أن يحتوي على إعلانات كثيرة",
+                    "أن يكون تصميم الموقع ملوناً وجذاباً",
+                    "وجود قفل مغلق وبداية الرابط بـ https://"
+                ],
+                correct: 3,
+                explanation: "بروتوكول HTTPS والقفل يشيران إلى تشفير البيانات المتبادلة بين متصفحك والموقع."
+            },
+            {
+                q: "13. ما هو البريد الإلكتروني الاحتيالي (Phishing Email)؟",
+                options: [
+                    "رسالة وهمية تبدو كأنها من جهة موثوقة لسرقة معلوماتك الشخصية أو البنكية",
+                    "بريد ترحيب من إدارة الجامعة",
+                    "رسالة إخبارية تقنية مفيدة",
+                    "بريد إلكتروني مخصص للدعم الفني"
+                ],
+                correct: 0,
+                explanation: "يستخدم المهاجمون رسائل التصيد لإيقاع المستخدمين في فخ إفشاء كلمات المرور أو البيانات."
+            },
+            {
+                q: "14. ما هي أفضل طريقة للتعامل مع رسالة بريدية مشبوهة تطلب منك إجراء عاجل؟",
+                options: [
+                    "الاستجابة الفورية خوفاً من إيقاف الحساب",
+                    "حذف الرسالة وعدم النقر على أي روابط أو مرفقات داخلها",
+                    "إعادة توجيهها لجميع الزملاء للتحذير بطريقة خاطئة",
+                    "الرد عليها بالسؤال عن هوية المرسل"
+                ],
+                correct: 1,
+                explanation: "التجاهل والحذف الآمن هو التصرف السليم لتجنب الوقوع في فخ الاحتيال."
+            },
+            {
+                q: "15. هل تدعم هوية نادي الذكاء الاصطناعي وجامعة الأمير سطام التحول الرقمي الآمن؟",
+                options: [
+                    "لا، الاهتمام ينصب على البرمجة فقط",
+                    "يقتصر على المسابقات الترفيهية",
+                    "نعم، من خلال نشر الوعي الرقمي وتمكين الكفاءات الوطنية تقنياً وأمنياً",
+                    "لا علاقة للأمن بالذكاء الاصطناعي"
+                ],
+                correct: 2,
+                explanation: "التحول الرقمي المستدام يتطلب بالضرورة وعياً أمنياً واحترافياً لحماية البيانات والأنظمة."
+            },
+            {
+                q: "16. ماذا تفعل إذا شككت أن هاتفك الذكي قد تعرض للاختراق؟",
+                options: [
+                    "إرسال رسالة للمخترق",
+                    "إغلاق الشاشة لفترة قصيرة فقط",
+                    "الاستمرار في استخدام بشكل طبيعي",
+                    "فصل الإنترنت، فحص الجهاز، وتغيير كلمات المرور الحساسة من جهاز آمن آخر"
+                ],
+                correct: 3,
+                explanation: "قطع الاتصال وتغيير بيانات الاعتماد يحد من الأضرار ويمنع تمدد الاختراق."
+            },
+            {
+                q: "17. ما هو دور مدير كلمات المرور (Password Manager)؟",
+                options: [
+                    "حفظ كلمات مرورك العشوائية والقوية وتوليدها بأمان",
+                    "مشاركة كلمات المرور مع الغرباء",
+                    "تسجيل أرقام الهواتف فقط",
+                    "حذف الحسابات القديمة تلقائياً"
+                ],
+                correct: 0,
+                explanation: "مدير كلمات المرور يسهل إدارة كلمات مرور معقدة وفريدة لكل حساب من دون الحاجة لحفظها يدوياً."
+            },
+            {
+                q: "18. هل يمكن للملفات بصيغة PDF أو الصور أن تحتوي على برمجيات خبيثة؟",
+                options: [
+                    "استحالة ذلك تماماً لأنها ملفات قراءة",
+                    "نعم، قد تحتوي أحياناً على استغلال لثغرات في برامج العرض أو روابط خبيثة",
+                    "فقط إذا تم إرسالها عبر الواتساب",
+                    "الصور لا تحمل أي خطورة مطلقا"
+                ],
+                correct: 1,
+                explanation: "بعض الملفات قد تستغل ثغرات برمجية (Zero-day) في قارئات المستندات لتنفيذ أوامر خبيثة."
+            },
+            {
+                q: "19. لماذا يطلب خبراء الأمن السيبراني عدم نشر التفاصيل الشخصية بكثرة على منصات التواصل؟",
+                options: [
+                    "لتجنب الإزعاج فقط",
+                    "لأنها تستهلك طاقة الهاتف",
+                    "لكونها تُستخدم من قبل المخترقين لهجمات الهندسة الاجتماعية والإجابة على أسئلة الأمان",
+                    "لأنها غير مسموحة نظاماً"
+                ],
+                correct: 2,
+                explanation: "المعلومات الشخصية (تاريخ الميلاد، اسم الحي، اسم الدلال) تسهل تخمين كلمات المرور أو الإجابة على استرجاع الحسابات."
+            },
+            {
+                q: "20. ما هي القاعدة الذهبية الأولى في التعامل مع أي رابط مجهول أو رمز QR غريب؟",
+                options: [
+                    "افتحه واكتشف ما بداخله بسرعة",
+                    "شارك الرابط مع أصدقائك",
+                    "أعد توجيهه لمجموعات الجامعة",
+                    "تحقق أولاً، فكر، ولا تقم بالمسح أو النقر إلا عند التيقن التام من المصدر"
+                ],
+                correct: 3,
+                explanation: "التأني والتحقق هو الدرع الأساسي للوقاية من كافة أشكال الاحتيال السيبراني."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let correctAnswersCount = 0;
+        let answered = false;
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            if (currentQuestion >= quizData.length) {
+                let percentage = Math.round((correctAnswersCount / quizData.length) * 100);
+                let evalMsg = percentage >= 80 ? "ممتاز! وعيك الأمني السيبراني عالٍ جداً." : "جيد، ولكن ننصح بمراجعة دليل الوقاية لتعزيز حمايتك الرقمية.";
+                
+                container.innerHTML = `
+                    <div class="quiz-score-card">
+                        <h3><i class="fas fa-trophy"></i> أتممت التحدي بنجاح!</h3>
+                        <p style="font-size: 20px; margin-bottom: 15px;">النسبة المئوية لوعيك السيبراني: <strong style="color: var(--success-green);">${percentage}%</strong></p>
+                        <p style="font-size: 15px; color: #dcdde1; margin-bottom: 15px;">أجبت بشكل صحيح على ${correctAnswersCount} من أصل ${quizData.length} أسئلة.</p>
+                        <p style="color: var(--neon-cyan); margin-bottom: 25px;">${evalMsg}</p>
+                        <button class="btn-safe" onclick="restartQuiz()">إعادة الاختبار</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const qData = quizData[currentQuestion];
+            let optionsHTML = '';
+            qData.options.options || qData.options.forEach((opt, index) => {
+                optionsHTML += `<button class="option-btn" onclick="selectOption(${index})">${opt}</button>`;
+            });
+
+            container.innerHTML = `
+                <div class="quiz-header-info">
+                    <span class="quiz-progress">السؤال ${currentQuestion + 1} من ${quizData.length}</span>
+                    <span class="quiz-points-badge"><i class="fas fa-percent"></i> قياس الوعي</span>
+                </div>
+                <div class="question-box">
+                    <h3>${qData.q}</h3>
+                    <div class="options-list">${optionsHTML}</div>
+                    <div class="quiz-feedback" id="quizFeedback"></div>
+                    <button class="quiz-nav-btn" id="nextBtn" onclick="nextQuestion()">السؤال التالي <i class="fas fa-arrow-left"></i></button>
+                </div>
+            `;
+            answered = false;
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const qData = quizData[currentQuestion];
+            const buttons = document.querySelectorAll('.option-btn');
+            const feedbackBox = document.getElementById('quizFeedback');
+            const nextBtn = document.getElementById('nextBtn');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === qData.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    btn.classList.add('wrong');
+                }
+            });
+
+            if (selectedIndex === qData.correct) {
+                correctAnswersCount++;
+                feedbackBox.className = "quiz-feedback show correct-fb";
+                feedbackBox.innerHTML = `<i class="fas fa-check-circle"></i> إجابة صحيحة! ${qData.explanation}`;
+            } else {
+                feedbackBox.className = "quiz-feedback show wrong-fb";
+                feedbackBox.innerHTML = `<i class="fas fa-times-circle"></i> إجابة غير دقيقة. ${qData.explanation}`;
+            }
+
+            nextBtn.style.display = "inline-block";
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            renderQuiz();
+        }
+
+        function restartQuiz() {
+            currentQuestion = 0;
+            correctAnswersCount = 0;
+            renderQuiz();
+        }
+
+        window.onload = function() {
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
